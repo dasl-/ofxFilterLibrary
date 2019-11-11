@@ -13,7 +13,7 @@
 
 class LookupFilter : public AbstractFilter {
 public:
-	LookupFilter(float width, float height, string lookupImageUrl);
+	LookupFilter(float width, float height, string lookupImageUrl, float alpha = 1);
 	virtual ~LookupFilter();
 
     

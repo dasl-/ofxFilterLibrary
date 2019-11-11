@@ -8,10 +8,11 @@
 
 #include "LookupFilter.h"
 
-LookupFilter::LookupFilter(float width, float height, string lookupImageUrl) : AbstractFilter(width, height) {
+LookupFilter::LookupFilter(float width, float height, string lookupImageUrl, float alpha) : AbstractFilter(width, height) {
     _name = "Lookup";
     ofLoadImage(_lookupTexture, lookupImageUrl);
     _addParameter(new ParameterT("inputImageTexture2", _lookupTexture, 2));
+    _addParameter(new ParameterF("alpha", alpha));
     _setupShader();
 }
 LookupFilter::~LookupFilter() {}
@@ -20,6 +21,7 @@ string LookupFilter::_getFragSrc() {
     return GLSL_STRING(120,
         uniform sampler2D inputImageTexture;
         uniform sampler2D inputImageTexture2; // lookup texture
+        uniform float alpha;
 
         void main() {
             vec2 uv = gl_TexCoord[0].xy;
@@ -47,7 +49,7 @@ string LookupFilter::_getFragSrc() {
             vec4 newColor2 = texture2D(inputImageTexture2, texPos2);
 
             vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
-            gl_FragColor = vec4(newColor.rgb, textureColor.w);
+            gl_FragColor = vec4(newColor.rgb, alpha);
         }
     );
 }
